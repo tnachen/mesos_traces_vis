@@ -1,4 +1,6 @@
-To ingest data into redis:
+This assumes all the tracing data is installed into a local redis instance.
+
+To ingest local data into redis:
 
 tail -f -c +1 <path> | python -u populate_trace_db.py
 
