@@ -1,27 +1,29 @@
 This assumes all the tracing data is installed into a local redis instance.
 
-To ingest local data into redis:
-
-tail -f -c +1 <path> | python -u populate_trace_db.py
-
-To install the Node.js server part:
-
-$ npm install
-```
-
-- Start the redis server (default localhost on port 6379)
-- Start node with server.js
+###To ingest local data into redis:
 
 ```shell
-    $ node server.js
+$ tail -f -c +1 <path> | python -u populate_trace_db.py
 ```
 
-- Open client.html in browser code
+###To compile Go binary:
 
 ```shell
-    $ open client.html
+$ go get -u
+$ go build
 ```
 
+##T#o start services
+
+Start the redis server (default localhost on port 6379)
+
+Start Go server (default 0.0.0.0 on port 3000)
+
+```shell
+$ ./mesos_traces_vis -p <port> -r <redis ip:port>
+```
+
+Access traces at http://<ip>:<port>
 
 
 

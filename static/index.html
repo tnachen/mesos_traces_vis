@@ -1,0 +1,48 @@
+<html>
+  <head>
+
+    <title>REAL TIME Go, Redis and Websocket</title>
+
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript">
+      setTimeout(function ()
+      {
+      
+ var loc = window.location, new_uri;
+      if (loc.protocol === "https:") {
+      new_uri = "wss:";
+      } else {
+      new_uri = "ws:" 
+      }
+      new_uri += "//" + loc.host;
+      new_uri += loc.pathname + "traces/ws";
+      var ws = new WebSocket(new_uri);
+      ws.onmessage = function (evt) 
+      { 
+      var data = JSON.parse(evt.data);
+      var date = new Date(Math.floor(data.time_nanos/1000000));
+      $('#traces').append('<li><a href="trace.html?id='+data.id+'">' + data.id + '</a> time : '+ date.toISOString() +'</li>');
+      };
+
+      }, 1000);
+    </script>
+    <script type="text/javascript">
+      $.getJSON("/traces", function(traces) {
+      $.each(traces, function(i, trace) {
+      var date = new Date(Math.floor(trace.time_nanos/1000000));
+      $('#traces').append('<li><a href="trace.html?id='+trace.id+'">' + trace.id + '</a> time : '+ date.toISOString() +'</li>');
+        });
+      });
+    </script>
+  </head>
+
+  <body style="font-family:monospace">
+
+    <h2>Mesos Traces</h2>
+          <ul id="traces">
+
+          </ul>
+  </body>
+</html>
+
