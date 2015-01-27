@@ -1,0 +1,46 @@
+redis:
+ image: redis
+ net: "host"
+
+master:
+ user: root
+ image: jimenez/mesos-dev:libprocess_traces
+ command: /mesos/build/bin/mesos-master.sh --ip=198.27.68.58 --work_dir=/ --registry=in_memory
+ volumes:
+  - /tmp/master:/tmp
+ net: host
+ environment:
+  LIBPROCESS_TRACE_ENABLED: 1
+
+slave:
+ user: root
+ image: jimenez/mesos-dev:libprocess_traces
+ command: /mesos/build/bin/mesos-slave.sh --master=198.27.68.58:5050 --containerizers=docker,mesos --hostname="198.27.68.58"
+ volumes:
+  - /sys/fs/cgroup/:/sys/fs/cgroup/
+  - /usr/bin/docker:/usr/bin/docker
+  - /var/run/docker.sock:/var/run/docker.sock
+  - /tmp/slave:/tmp
+ net: "host"
+ environment:
+  LIBPROCESS_TRACE_ENABLED: 1
+
+vis:
+ image: jimenez/mesos-traces-vis
+ command: go build && ./app
+ net: "host"
+ volumes:
+  - /tmp
+ ports:
+  - "3000:3000"
+
+volt:
+ image: volt/volt
+ command: --master=198.27.68.58:5050 --ip=198.27.68.58
+ net: "host"
+ volumes_from:
+ - slave
+ volumes:
+  - /sys/fs/cgroup/:/sys/fs/cgroup/
+  - /usr/bin/docker:/usr/bin/docker
+  - /var/run/docker.sock:/var/run/docker.sock
