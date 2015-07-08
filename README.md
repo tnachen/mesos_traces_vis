@@ -1,3 +1,8 @@
+This repository is a web server / visualization that visualizes traces in Mesos.
+This is built upon the traces work done here http://github.com/tnachen/mesos/tree/libprocess_trace
+
+###To start mesos with trace enabled
+Grab the source tree and build mesos, then start mesos-master and mesos-slave with MESOS_TRACE_ENABLED=1 env variable.
 
 ###To ingest local data into redis:
 
